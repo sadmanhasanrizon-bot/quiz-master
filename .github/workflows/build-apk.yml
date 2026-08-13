@@ -13,32 +13,19 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Set up Java JDK 21
+    - name: Set up Java JDK 17
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: '17'
         distribution: 'temurin'
 
-    - name: Fix Compatibility & Build APK
+    - name: Build Debug APK
       run: |
         if [ -d "quiz-master (1)" ]; then
           cd "quiz-master (1)"
         fi
-
-        # ১. উইন্ডোজের ক্যাশ ডিলিট
-        rm -f local.properties
-
-        # ২. AGP ৮.২.২ ভার্সন সেট করা
-        find . -name "build.gradle.kts" -exec sed -i 's/9.1.1/8.2.2/g' {} +
-        find . -name "build.gradle" -exec sed -i 's/9.1.1/8.2.2/g' {} +
-
-        # ৩. গ্র্যাডল ভার্সন ৮.৭ এ আপডেট (যা Java 21 / Version 65 পুরোপুরি সাপোর্ট করে)
-        if [ -f "gradle/wrapper/gradle-wrapper.properties" ]; then
-          sed -i 's/gradle-.*-bin.zip/gradle-8.7-bin.zip/g' gradle/wrapper/gradle-wrapper.properties
-        fi
-
         chmod +x gradlew
-        ./gradlew assembleDebug --no-daemon --stacktrace
+        ./gradlew assembleDebug
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
