@@ -8,6 +8,7 @@ workflows:
     scripts:
       - name: Build Android APK
         script: |
+          cd quiz-master
           chmod +x gradlew
           ./gradlew assembleDebug
     artifacts:
