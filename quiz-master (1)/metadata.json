@@ -1,6 +1,0 @@
-{
-  "name": "Quiz Master",
-  "description": "A premium multilingual quiz application with unlimited dynamic levels, 3D locks, and text-to-speech learning.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
