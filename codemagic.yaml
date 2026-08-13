@@ -6,9 +6,15 @@ workflows:
     environment:
       java: 17
     scripts:
-      - name: Set permissions for gradlew
-        script: chmod +x gradlew
       - name: Build Android APK
-        script: ./gradlew assembleDebug
+        script: |
+          if [ -f "gradlew" ]; then
+            chmod +x gradlew
+            ./gradlew assembleDebug
+          else
+            cd quiz-master* || cd quiz* || exit 1
+            chmod +x gradlew
+            ./gradlew assembleDebug
+          fi
     artifacts:
-      - app/build/outputs/apk/**/*.apk
+      - "**/build/outputs/apk/**/*.apk"
