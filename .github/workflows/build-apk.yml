@@ -13,34 +13,31 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Set up Java JDK 21
+    - name: Set up Java JDK 17
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: '17'
         distribution: 'temurin'
 
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-
-    - name: Fix Environment & Build APK
+    - name: Fix AGP Version & Build APK
       run: |
-        # প্রজেক্ট ফোল্ডারে ঢোকা
         if [ -d "quiz-master (1)" ]; then
           cd "quiz-master (1)"
         fi
 
-        # উইন্ডোজের ক্যাশ ফাইল রিমুভ
+        # ১. ভুল Windows Path মুছে ফেলা
         rm -f local.properties
 
-        # গ্র্যাডল ভার্সন অটো-ফিক্স
+        # ২. অকার্যকর AGP 9.1.1 কে পরিবর্তন করে Stable AGP 8.2.2 এ নামিয়ে আনা
+        find . -name "build.gradle.kts" -exec sed -i 's/9.1.1/8.2.2/g' {} +
+        find . -name "build.gradle" -exec sed -i 's/9.1.1/8.2.2/g' {} +
+
+        # ৩. Gradle Wrapper ৮.২ এ ডাউনগ্রেড করা যাতে AGP 8.2.2 এর সাথে ম্যাচ করে
         if [ -f "gradle/wrapper/gradle-wrapper.properties" ]; then
-          sed -i 's/gradle-9.3.0-bin.zip/gradle-9.3.1-bin.zip/g' gradle/wrapper/gradle-wrapper.properties
+          sed -i 's/gradle-.*-bin.zip/gradle-8.2-bin.zip/g' gradle/wrapper/gradle-wrapper.properties
         fi
 
         chmod +x gradlew
-
-        # মেমোরি ৪ জিবি বাড়িয়ে ক্র্যাশ ফিক্স করা
-        export GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx4096m -Dfile.encoding=UTF-8"
         ./gradlew assembleDebug --no-daemon --stacktrace
 
     - name: Upload APK Artifact
