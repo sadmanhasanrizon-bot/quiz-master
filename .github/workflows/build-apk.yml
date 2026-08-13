@@ -19,11 +19,15 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Run Build inside folder or root
+    - name: Fix Gradle Version & Build APK
       run: |
         if [ -d "quiz-master (1)" ]; then
           cd "quiz-master (1)"
         fi
+        
+        # Auto update Gradle wrapper to 9.3.1
+        sed -i 's/gradle-9.3.0-bin.zip/gradle-9.3.1-bin.zip/g' gradle/wrapper/gradle-wrapper.properties
+        
         chmod +x gradlew
         ./gradlew assembleDebug --stacktrace
 
