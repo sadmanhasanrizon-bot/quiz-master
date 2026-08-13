@@ -8,13 +8,8 @@ workflows:
     scripts:
       - name: Build Android APK
         script: |
-          if [ -f "gradlew" ]; then
-            chmod +x gradlew
-            ./gradlew assembleDebug
-          else
-            cd quiz-master* || cd quiz* || exit 1
-            chmod +x gradlew
-            ./gradlew assembleDebug
-          fi
+          cd "quiz-master (1)"
+          chmod +x gradlew
+          ./gradlew assembleDebug
     artifacts:
       - "**/build/outputs/apk/**/*.apk"
